@@ -86,7 +86,7 @@ The summary about clients' races and number of clients (frequencies) in each rac
 | ------------------- | ------ |
 | American Indian or Alaska Native (HUD) | 90 |
 | Asian (HUD) | 3 |
-| Black or African American (HUD) | 864 |
+| Black or African American (HUD) | 3864 |
 | Client doesn't know (HUD) | 4 |
 | Client refused (HUD) | 5 |
 | Data not collected (HUD) | 6 |
