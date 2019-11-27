@@ -40,10 +40,10 @@ The summary about EE providers and number of clients (frequencies) they have acc
 | -------------- | ------ |
 | Urban Ministries of Durham - Durham County - Singles Emergency Shelter - Private(5838) | 4319 |
 | XXXClosed2015 Urban Ministries of Durham- Durham County- Journey Entry- ESG(1970) | 721  |
-|XXXClosed2015 Urban Ministries of Durham- Durham County- Journey Forward- ESG(5694) |  65 |  
-|XXXClosed2015 Urban Ministries of Durham- Durham County- Journey Outreach- ESG(4515) | 51 |
 |XXXClosed2015 Urban Ministries of Durham- Durham County- Journey Recovery- ESG(1932) | 67 |
+|XXXClosed2015 Urban Ministries of Durham- Durham County- Journey Forward- ESG(5694) |  65 | 
 |XXXClosed2015 Urban Ministries of Durham- Durham County- Journey Tech- ESG(4516) | 61 |
+|XXXClosed2015 Urban Ministries of Durham- Durham County- Journey Outreach- ESG(4515) | 51 |
 |XXXClosed2015 Urban Ministries of Durham- Durham County- Journey Veterans- ESG(5069) | 15 |
 
 This result shows that there were 7 different providers, but it seems that only the first one (which is also the major one) is still open from the names of other providers.
@@ -54,29 +54,23 @@ The summary about clients' genders and number of clients (frequencies) in each g
 
 | Client Gender | Number |
 | ------------- | ------ |
-| Female | 1290 |
 | Male | 3989 |
+| Female | 1290 |
 |Trans Female (MTF or Male to Female) | 17 |
 
-
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
-ggplot(client_final %>% select(`Client Gender`) %>% drop_na(), mapping = aes(`Client Gender`)) + 
-  geom_bar() + 
-  labs(title = "Barplot for clients gender")
-```
-
-From both the summary statistics and plot we know that most clients came to the shelter were male (~80%). There were also few trans females clients.
+From the summary statistics and plot we know that most clients came to the shelter were male (~80%). There were also few trans females clients.
 
 ### (3) Summary about clients ages
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
-ggplot(client_final, mapping = aes(`Client Age at Entry`)) + 
-  geom_density() + 
-  labs(title = "Density for client age at entry")
+ggplot(client_final, mapping = aes(x = `Client Age at Entry`, fill = `Client Gender`, color = `Client Gender` )) + 
+  geom_histogram(position = 'dodge') +  
+  theme(legend.text = element_text(size = 8), legend.position = 'bottom') + 
+  labs(title = "Histogram of client age at entry (stratified by gender)")
 ```
 
-From the plot we know most of the clients were ~50 years old, but there was a peak at ~22 years old. 
+From the plot we know most of the clients were ~50 years old, but there was a small peak at ~22 years old. 
 
 ### (4) Summary about clients races
 
@@ -84,14 +78,15 @@ The summary about clients' races and number of clients (frequencies) in each rac
 
 | Client Primary Race | Number |
 | ------------------- | ------ |
-| American Indian or Alaska Native (HUD) | 90 |
-| Asian (HUD) | 3 |
 | Black or African American (HUD) | 3864 |
-| Client doesn't know (HUD) | 4 |
-| Client refused (HUD) | 5 |
-| Data not collected (HUD) | 6 |
-| Native Hawaiian or Other Pacific Islander (HUD) | 1 |
 | White (HUD) | 1313 |
+| American Indian or Alaska Native (HUD) | 90 |
+| Data not collected (HUD) | 6 |
+| Client refused (HUD) | 5 |
+| Client doesn't know (HUD) | 4 |
+| Asian (HUD) | 3 |
+| Native Hawaiian or Other Pacific Islander (HUD) | 1 |
+
 
 Most of the clients were black and white, with few minorities. 
 
@@ -102,12 +97,13 @@ The summary about clients' veteran status and number of clients (frequencies) in
 
 | Client Veteran Status | Number |
 | --------------------- | ------ |
-| Data not collected (HUD) | 7 |
 | No (HUD) | 4724 |
 | Yes (HUD) | 558 |
+| Data not collected (HUD) | 7 |
+
 
 ```{r,echo=FALSE, message=FALSE, warning=FALSE, fig.align='center' }
-ggplot(client_final %>% select(`Client Veteran Status`) %>% drop_na(), mapping = aes(`Client Veteran Status`)) + 
+ggplot(client_final %>% select(`Client Veteran Status`) %>% drop_na(), mapping = aes(`Client Veteran Status` )) + 
   geom_bar() + 
   labs(title = "Barplot for clients veteran status")
 ```
@@ -150,7 +146,7 @@ The summary about clients' left reasons (destinations) and number of clients (fr
 | Owned by client, with ongoing housing subsidy | 2 |
 | Rental by client in a public housing unit | 1 |
 
-Most people left because they would gonna stay with friends for temporary tenure. 
+Most people left to stay with friends for temporary tenure.
 
 ## 2. Specific analysis for individual client.
 ### (1) Who came most often.
@@ -200,7 +196,7 @@ We can see from the plot that most people stayed for quite a short time (~10 day
 
 ### (2) Fit a regression model for clients staying days
 
-We then want fit a regression model where the response variable is client staying days. The first question is about the explanotory varialbes. Potential explanotory variables are client age at entry, client gender, client race, client veteran status, client income at entry, client insurance types at entry, clinet noncash services at entry, client disabilities at entry. We first convert the catogorical data to numricals.
+We then want fit a regression model where the response variable is client staying days. The first question is about the explanatory variables. Potential explanotory variables are client age at entry, client gender, client race, client veteran status, client income at entry, client insurance types at entry, clinet noncash services at entry, client disabilities at entry. We first convert the catogorical data to numericals.
 
 #### a. Converting data to numerical
 The catogorical data in this context are the variables shown above except for age and income. The original datasets recording variables such as insurance were divided by different types of insurance, for example. Therefore we should count the number of insurance types for each visit. Repeat the same thing for noncash services and disabilities, also do similar thing for client income by summing up the values of different income sources. Then those variables are numerical.
