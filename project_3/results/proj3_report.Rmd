@@ -183,10 +183,10 @@ ggplot(client_final, mapping = aes(`Time Spent (days)`)) +
   labs(title = "Density for days client spent in shelter")
 ```
 
-From the above plot, most people stayed for less than 250 days. To better see the details, we zoom in the plot in the (0, 250) interval.
+From the above plot, most people stayed for less than 500 days. To better see the details, we zoom in the plot in the (0, 500) interval.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
-ggplot(client_final %>% filter(`Time Spent (days)`<250), mapping = aes(`Time Spent (days)`)) + 
+ggplot(client_final %>% filter(`Time Spent (days)`<500), mapping = aes(`Time Spent (days)`)) + 
   geom_density() + 
   labs(title = "Density for days client spent in shelter (zoomed in)")
 ```
@@ -211,18 +211,27 @@ Then the next question is, should we use all the variables above in the model? T
 Therefore, we choose client age at entry, noncash services at entry, client primary race, client primary race2, client veteran status and client gender as model variables.
 
 #### c. Fit the model
-We use OLS function in statsmodels.api package in python to fit a regression model. The model summary result is shown below:
+We first know that the distribution of staying length is not normal, thus we do a log transformation first and use the 'log(days)' as our response variable. And remove outliers, which are defined as >500 days or =0 day.
+
+We use OLS function in statsmodels.api package in python to fit a regression model. OLS is short for "Ordinary Least Square", which is a method to generate a linear model. The model summary result is shown below:
 
 ![](./model.png)
 
-The model R square is 0.277 which means the model is relatively bad. It's reasonable since the length that people wanted to stay is really subjective. It is nearly impossible to be well-fitted. But using this model, we can see in general,
+The model R square is 0.732 which is not too bad. From the model fitting results, we can see in general,
 
 1. veterans tended to stay in the shelter shorter than non-veterans,
 
-2. older people tended to stay in the sheleter longer than younger people,
+2. men tended to stay in the shelter longer than women,
 
-3. Black people tended to stay in the shelter longer than white people.
+3. older people tended to stay in the shelter longer than younger people,
 
+4. black people tended to stay in the shelter longer than white people.
+
+If we use more stringent principles (>500 days or <=2 days) for the outliers, the model R square will be 0.838.
+
+![](./model2.png)
+
+But we still couldn't predict the staying length pretty well since it's really objective. Different people may have different thoughts and preferences. It seems most people would treat the shleter as a temporary place to stay, and they may leave quickly after successfully contacting their friends/families.
 
 #### d. Visualization about relationships between days spent and other variables.
 ##### i. Days spent vs. age/gender
@@ -266,7 +275,7 @@ First we create variables to denote the changes after clients staying in the she
 
 $$ \text{Score} = 0.0004 \times \text{Income diff} + 0.4 \times \text{Insurance diff} + 0.4 \times \text{Noncash diff} - 0.2 \times \text{Disability diff} $$
 
-The reason we give "Income diff" weight $0.0004$ is that the values of income difference are around ~1000. This weight may avoid the case that this variable is the dominant one amoung the four variables.
+The reason we give "Income diff" weight $0.0004$ is that the values of income difference are around ~1000. This weight may avoid the case that this variable is the dominant one among the four variables.
 
 The average score of visits are $0.098$, and $5690$ frequency visits out of $25454$ have improved. The density of score is shown as below:
 

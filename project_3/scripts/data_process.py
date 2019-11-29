@@ -200,9 +200,18 @@ final_nona = final_nona.apply(pd.to_numeric, args=('coerce',))
 final_nona.replace([np.inf, -np.inf], np.nan)
 final_nona.dropna(inplace = True)
 
+# Remove outliers (spent days >= 500 or <= 1)
+final_nona = final_nona.loc[final_nona['Time Spent (days)']<500, ]
+final_nona = final_nona.loc[final_nona['Time Spent (days)']>0, ]
+
+# Log transformation of spent days
+final_nona['log(days)'] = [math.log(x) for x in final_nona['Time Spent (days)']]
+final_nona.drop(columns=['Time Spent (days)'],inplace=True)
+
+
 # Choose variables by calculating the pearson correlation matrix
 correlation = final_nona.corr(method='pearson')
-columns = correlation.nlargest(7, 'Time Spent (days)').index
+columns = correlation.nlargest(7, 'log(days)').index
 columns
 
 # Plot the pearson correlation matrix
@@ -218,11 +227,25 @@ figure.savefig('../results/heatmap.png')
 X = final_nona[['Client Age at Entry', 'Noncash (Entry)',
        'Client Primary Race2', 'Client Primary Race', 'Client Veteran Status',
                 'Client Gender']]
-Y = final_nona['Time Spent (days)']
+Y = final_nona['log(days)']
 
 # Train linear regression model
 model_LR = sm.OLS(Y, X).fit()
 model_LR.summary()
+
+# More stringent conditions for outliers (spent days >= 500 or <= 2)
+final_nona = final_nona.loc[final_nona['log(days)']>math.log(2), ]
+
+# Specify our x and y
+X = final_nona[['Client Age at Entry', 'Noncash (Entry)',
+       'Client Primary Race2', 'Client Primary Race', 'Client Veteran Status',
+                 'Client Gender']]
+Y = final_nona['log(days)']
+
+# Train linear regression model
+model_LR = sm.OLS(Y, X).fit()
+model_LR.summary()
+
 
 # Creat variables to compare changes
 # Create another dataframe
