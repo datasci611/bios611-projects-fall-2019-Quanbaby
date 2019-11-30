@@ -206,7 +206,7 @@ final_nona = final_nona.loc[final_nona['Time Spent (days)']>0, ]
 
 # Log transformation of spent days
 final_nona['log(days)'] = [math.log(x) for x in final_nona['Time Spent (days)']]
-final_nona.drop(columns=['Time Spent (days)'],inplace=True)
+final_nona.drop(['Time Spent (days)'],axis=1)
 
 
 # Choose variables by calculating the pearson correlation matrix
