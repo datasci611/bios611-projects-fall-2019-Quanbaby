@@ -42,9 +42,15 @@ More information about UMD could be found on their website here: https://umdurha
 
 Step 1. Git clone my github folder /project_3.
 
-Step 2. Navigate into the /scripts folder.
+Step 2. Navigate into the /project3/scripts folder.
 
 Step 3. Type "make". The figures would be generated in the /results folder (They are not in there now).
+
+
+```
+git clone https://github.com/datasci611/bios611-projects-fall-2019-Quanbaby.git && cd bios611-projects-fall-2019-Quanbaby/project_3/scripts && make
+```
+
 
 Please let me know if you run into any issues trying to run my codes.
 
